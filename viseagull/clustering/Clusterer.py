@@ -70,7 +70,7 @@ class Clusterer:
 
         for (filename, cluster) in zip(filenames, clusterer.labels_):
 
-            filename = filename.replace("/", "\\")
+            #filename = filename.replace("/", "\\")
 
             if not join_clusterless_samples and cluster == -1:
                 cluster = backwards_index
