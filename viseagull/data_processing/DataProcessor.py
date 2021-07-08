@@ -48,11 +48,13 @@ class DataProcessor:
             tsne = sklearn.manifold.TSNE(n_components=2, perplexity=5, metric='precomputed', square_distances=True)
             embedded_data = tsne.fit_transform(df)
 
+        
         elif method == 'MCA':
         
             df.replace({0: "False", 1: "True"}, inplace = True)
             mca = prince.MCA(n_components=2)
             embedded_data = mca.fit_transform(df)
+        
 
         elif method == 'NMDS':
 

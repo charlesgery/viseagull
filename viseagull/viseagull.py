@@ -2,8 +2,6 @@ import logging
 import argparse
 import shutil
 
-from scipy.spatial import distance
-
 from viseagull.webserver import run_webserver
 from viseagull.analysis.LogicalAnalyzer import LogicalAnalyzer
 from viseagull.analysis.SemanticAnalyzer import SemanticAnalyzer
