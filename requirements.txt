@@ -2,7 +2,7 @@ pydriller
 tqdm
 pandas
 scikit-learn
-git
+GitPython
 hdbscan
 prince
 nltk
