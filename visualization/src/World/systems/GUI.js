@@ -12,18 +12,17 @@ class GUI {
         this.gui = new dat.GUI({name: 'Couplings Visualization'});
 
         var parameters = {
-            buildingColor : "base",
-            hovered : "",
-            highlightedCommit : "",
-            routeSlider : 0
+            "Building Color" : "base",
+            "Highlight Commit with Hash" : "",
+            "Display routes with width >=" : 0
         }
 
-        this.buildingColor = this.gui.add(parameters, "buildingColor", ["base", "creation_date", "last_modification"]);
+        this.buildingColor = this.gui.add(parameters, "Building Color", ["base", "File Creation Date", "File Last Modification Date"]);
         this.buildingColor.onChange(function(value){
             updateBuildingColor(value, cities, filesModificationsDates);
         });
 
-        this.highlightedCommit = this.gui.add(parameters, "highlightedCommit");
+        this.highlightedCommit = this.gui.add(parameters, "Highlight Commit with Hash");
         this.highlightedCommit.onChange(function(value){
             mouseRaycaster.updateHighlightedCommit(value);
         });
@@ -33,9 +32,9 @@ class GUI {
             if (routes[i].children[0].routeWidth > maxWidth) maxWidth = routes[i].children[0].routeWidth;
         }
 
-        this.hovered = this.gui.add(mouseRaycaster, "hoveredObjectData").listen();
+        this.hovered = this.gui.add(mouseRaycaster, "Hovered Element Information").listen();
 
-        this.routeSlider = this.gui.add(parameters, "routeSlider", 0, maxWidth);
+        this.routeSlider = this.gui.add(parameters, "Display routes with width >=", 0, maxWidth);
         this.routeSlider.onChange(function(value){
             updateDisplayedRoutes(value, routes, scene);
         });
@@ -54,11 +53,17 @@ function updateBuildingColor(value, cities, filesModificationsDates){
 
     var minMaxDate = null;
     if (value != 'base'){
-        var minMaxDate = getMinMaxDate(filesModificationsDates, value);
+        var type = "base";
+        if (value == "File Creation Date"){
+            type = "creation_date";
+        } else if (value == "File Last Modification Date"){
+            type = "last_modification";
+        }
+        var minMaxDate = getMinMaxDate(filesModificationsDates, type);
     }
 
     for(let i=0; i < cities.length; i++){
-        cities[i].updateColor(filesModificationsDates, minMaxDate, value);
+        cities[i].updateColor(filesModificationsDates, minMaxDate, type);
     }
 };
 

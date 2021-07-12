@@ -15,7 +15,7 @@ const setSize = (container, camera, renderer) => {
         const mouse = new Vector2(1, 1);
 
         this.trackedObjects = [];
-        this.hoveredObjectData = "";
+        this["Hovered Element Information"] = "";
         this.commitToFiles = commitToFiles;
         this.highlightedCommit = null;
   
@@ -46,10 +46,10 @@ const setSize = (container, camera, renderer) => {
                     this.trackedObjects[i].object.material.color.set(0xffff00)
 
                     if (this.trackedObjects[i].tag == 'building'){
-                        this.hoveredObjectData = this.trackedObjects[i].object.fileName;
+                        this["Hovered Element Information"] = this.trackedObjects[i].object.fileName;
                     }
                     else if (this.trackedObjects[i].tag == 'road'){
-                        this.hoveredObjectData = this.trackedObjects[i].object.firstCityLabel + ' to ' + this.trackedObjects[i].object.secondCityLabel + '. Width :' + this.trackedObjects[i].object.routeWidth;
+                        this["Hovered Element Information"] = this.trackedObjects[i].object.firstCityLabel + ' to ' + this.trackedObjects[i].object.secondCityLabel + '. Width :' + this.trackedObjects[i].object.routeWidth;
                     }
 
                 }
