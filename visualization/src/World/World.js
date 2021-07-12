@@ -141,7 +141,7 @@ class World {
     */
 
     // GUI
-    var gui = new GUI(cities, filesModificationsDates, this.mouseRaycaster, routes);
+    var gui = new GUI(cities, filesModificationsDates, this.mouseRaycaster, routes, scene);
 
     
   }

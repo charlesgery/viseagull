@@ -5,7 +5,9 @@ import { getMinMaxDate } from '../helpers/worldHelpers.js';
 class GUI {
 
 
-    constructor(cities, filesModificationsDates, mouseRaycaster, routes){
+    constructor(cities, filesModificationsDates, mouseRaycaster, routes, scene){
+
+        this.routes = routes;
 
         this.gui = new dat.GUI({name: 'Couplings Visualization'});
 
@@ -26,13 +28,17 @@ class GUI {
             mouseRaycaster.updateHighlightedCommit(value);
         });
 
+        var maxWidth = 0;
         for (let i=0; i<routes.length; i++){
-            
+            if (routes[i].children[0].routeWidth > maxWidth) maxWidth = routes[i].children[0].routeWidth;
         }
 
         this.hovered = this.gui.add(mouseRaycaster, "hoveredObjectData").listen();
 
-        this.routeSlider = this.gui.add(parameters, "routeSlider", 0, 100);
+        this.routeSlider = this.gui.add(parameters, "routeSlider", 0, maxWidth);
+        this.routeSlider.onChange(function(value){
+            updateDisplayedRoutes(value, routes, scene);
+        });
 
         this.gui.width = 500;
 
@@ -55,5 +61,16 @@ function updateBuildingColor(value, cities, filesModificationsDates){
         cities[i].updateColor(filesModificationsDates, minMaxDate, value);
     }
 };
+
+function updateDisplayedRoutes(value, routes, scene){
+    for (let i=0; i<routes.length; i++){
+        if (routes[i].children[0].routeWidth < value){
+            scene.remove(routes[i]);
+        } else if (routes[i].parent != scene) {
+            scene.add(routes[i]);
+        }
+    }
+
+}
 
 export { GUI };
