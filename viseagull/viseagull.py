@@ -59,8 +59,6 @@ under certain conditions; type `show c' for details.\n\n"""
     parser.add_argument('--load', help='load existing template', type=str, nargs=1)
     args = parser.parse_args()
 
-    print(args)
-
     if args.load is not None:
 
         logger.info('Loading existing template')
@@ -70,26 +68,27 @@ under certain conditions; type `show c' for details.\n\n"""
 
     else:
 
-        logger.info('Initializing analyzer')
+        logger.info('STEP 1/5 - Initializing analyzer')
         analyzer = get_analyzer(args.couplings, args.url[0])
         
 
-        logger.info('Analyzing Couplings')
+        logger.info('STEP 2/5 - Analyzing Couplings')
         analyzer.compute_couplings()
 
-        logger.info('Computing distance matrix')
+        logger.info('STEP 3/5 - Computing distance matrix')
         distance_matrix = analyzer.get_distance_matrix()
 
+        logger.info('STEP 4/5 - Computing Clustering')
         clusterer = get_clusterer(args.couplings, distance_matrix)
-
-        logger.info('Computing Clustering')
         clusterer.compute_clustering()
 
+        logger.info('STEP 5/5 - Setting up visualization data')
         data_processor = DataProcessor(analyzer, clusterer)
         data_processor.setup_visualization_data(args.save)
 
-    logger.info('Running web server')
+    logger.info('Visualization web server running at localhost:8000')
     run_webserver()
+    
 
 if __name__ == "__main__":
 
