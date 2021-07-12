@@ -2,6 +2,7 @@ import os
 import atexit
 import tempfile
 import shutil
+from distutils.dir_util import copy_tree
 
 import pydriller
 import tqdm
@@ -38,7 +39,7 @@ class Analyzer:
         if self._is_remote_repository(url):
             self.repo_folder = self._clone_remote_repository(self._clone_folder(), url)
         else:
-            raise ValueError('The url is not a remote repository url')
+            self.repo_folder = self._clone_local_repository(self._clone_folder(), url)
 
         # Get a Repository object
         self.repository_mining = pydriller.Repository(self.repo_folder, num_workers=1)
@@ -97,6 +98,15 @@ class Analyzer:
 
         repo_folder = os.path.join(path_to_folder, self._get_repo_name_from_url(repo))
         git.Repo.clone_from(url=repo, to_path=repo_folder)
+
+        return repo_folder
+
+    def _clone_local_repository(self, path_to_tmp_folder: str, path_to_repo: str) -> str:
+        """Clones a local repository to a temp folder
+        """
+
+        repo_folder = os.path.join(path_to_tmp_folder, self._get_repo_name_from_url(path_to_repo))
+        copy_tree(path_to_repo, repo_folder)
 
         return repo_folder
     
