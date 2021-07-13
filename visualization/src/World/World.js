@@ -97,9 +97,12 @@ class World {
           }
         }
 
-        const route = new Route(cities[firstCityIndex], cities[secondCityIndex], routesData[i]);
-        routes.push(route);
-        scene.add(route);
+        //if(cities[firstCityIndex].cityLabel == 21 && cities[secondCityIndex].cityLabel == 45){
+          const route = new Route(cities[firstCityIndex], cities[secondCityIndex], routesData[i]);
+          routes.push(route);
+          scene.add(route);
+        //}
+        
 
       }
     }

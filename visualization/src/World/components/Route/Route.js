@@ -110,7 +110,10 @@ class Route extends Group {
         theta2 = 2 * Math.PI - sMath.acos(op2.x * om2.x + op2.y * om2.y);
     }
 
-    
+
+    var firstCityCenter = firstCity.getCityCenter();
+    var secondCityCenter = secondCity.getCityCenter();
+
 
     shape.moveTo(startingX, startingY);
 
@@ -119,7 +122,7 @@ class Route extends Group {
     var firstRadiusUpdate;
 
     if (bestDirection[0] == 'N'){
-        if (c1.x > firstCity.position.x) {
+        if (c1.x > firstCityCenter.x) {
             firstClockwise = true;
             firstArcAngle1 = Math.PI;
             firstArcAngle2 = Math.PI + theta1;
@@ -131,7 +134,7 @@ class Route extends Group {
             firstRadiusUpdate = routeWidth;
         }
     } else if (bestDirection[0] == 'S') {
-        if (c1.x > firstCity.position.x) {
+        if (c1.x > firstCityCenter.x) {
             firstClockwise = false;
             firstArcAngle1 = Math.PI;
             firstArcAngle2 = Math.PI + theta1;
@@ -143,7 +146,7 @@ class Route extends Group {
             firstRadiusUpdate = routeWidth;
         }
     } else if (bestDirection[0] == 'E') {
-        if (c1.y > firstCity.position.z) {
+        if (c1.y > firstCityCenter.y) {
             firstClockwise = true;
             firstArcAngle1 = 3 * Math.PI / 2;
             firstArcAngle2 = 3 * Math.PI / 2 + theta1;
@@ -155,7 +158,7 @@ class Route extends Group {
             firstRadiusUpdate = routeWidth;
         }
     } else if (bestDirection[0] == 'W') {
-        if (c1.y > firstCity.position.z) {
+        if (c1.y > firstCityCenter.y) {
             firstClockwise = false;
             firstArcAngle1 = 3 * Math.PI / 2;
             firstArcAngle2 = 3 * Math.PI / 2 + theta1;
@@ -174,7 +177,7 @@ class Route extends Group {
     var secondRadiusUpdate;
 
     if (bestDirection[1] == 'N'){
-        if (c2.x > secondCity.position.x) {
+        if (c2.x > secondCityCenter.x) {
             secondClockwise = false;
             secondArcAngle1 = Math.PI + theta2;
             secondArcAngle2 = Math.PI;
@@ -186,7 +189,7 @@ class Route extends Group {
             secondRadiusUpdate = + routeWidth;
         }
     } else if (bestDirection[1] == 'S'){
-        if (c2.x > secondCity.position.x) {
+        if (c2.x > secondCityCenter.x) {
             secondClockwise = true;
             secondArcAngle1 = Math.PI + theta2;
             secondArcAngle2 = Math.PI;
@@ -198,7 +201,7 @@ class Route extends Group {
             secondRadiusUpdate = routeWidth;
         }
     } else if (bestDirection[1] == 'E'){
-        if (c2.y > secondCity.position.z) {
+        if (c2.y > secondCityCenter.y) {
             secondClockwise = false;
             secondArcAngle1 = 3 * Math.PI / 2 + theta2;
             secondArcAngle2 = 3 * Math.PI / 2;
@@ -210,7 +213,7 @@ class Route extends Group {
             secondRadiusUpdate = routeWidth;
         }
     } else if (bestDirection[1] == 'W'){
-        if (c2.y > secondCity.position.z) {
+        if (c2.y > secondCityCenter.y) {
             secondClockwise = true;
             secondArcAngle1 = 3 * Math.PI / 2 + theta2;
             secondArcAngle2 = 3 * Math.PI / 2;
@@ -223,15 +226,6 @@ class Route extends Group {
         }
     }
     shape.absarc(c2.x, c2.y, r2, secondArcAngle1, secondArcAngle2, secondClockwise);
-
-    
-    // shape.absarc(c1.x, c1.y, r1, 3 * Math.PI / 2, 3 * Math.PI / 2 + theta1, true)
-    // shape.absarc(c2.x, c2.y, r2, Math.PI + theta2, Math.PI , true)
-
-
-
-    
-    // shape.quadraticCurveTo((startingX + endingX) / 2, (startingY + endingY) / 2, endingX, endingY);
 
 
     if(isEdgeCase(bestDirection)) {
@@ -259,19 +253,6 @@ class Route extends Group {
 
     shape.absarc(c2.x, c2.y, r2 + secondRadiusUpdate, secondArcAngle2, secondArcAngle1, !secondClockwise)
     shape.absarc(c1.x, c1.y, r1 + firstRadiusUpdate, firstArcAngle2, firstArcAngle1, !firstClockwise)
-    
-
-    /*
-    if (bestDirection[0] == 'N'){
-        shape.quadraticCurveTo((startingX + endingX + 2 * routeWidth) / 2, (startingY + endingY - 2 * routeWidth) / 2, startingX + routeWidth, startingY);
-    } else if (bestDirection[0] == 'S'){
-        shape.quadraticCurveTo((startingX + endingX + 2 * routeWidth) / 2, (startingY + endingY - 2 * routeWidth) / 2, startingX + routeWidth, startingY);
-    } else if (bestDirection[0] == 'W'){
-        shape.quadraticCurveTo((startingX + endingX) / 2, (startingY + endingY + 2 * routeWidth) / 2, startingX, startingY + routeWidth);
-    } else if (bestDirection[0] == 'E'){
-        shape.quadraticCurveTo((startingX + endingX) / 2, (startingY + endingY + 2 * routeWidth) / 2, startingX, startingY + routeWidth);
-    }
-    */
 
     shape.lineTo(startingX, startingY);
 

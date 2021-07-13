@@ -113,7 +113,9 @@ function computeBestDirection(startCity, endCity) {
 
         let relativeAngle = Math.atan2(direction[1], direction[0]) - Math.atan2(baseDirection[1], baseDirection[0]);
 
+
         let angle = Math.abs(relativeAngle);
+        if (angle > Math.PI) angle = 2 * Math.PI - angle;
 
 
         if (angle < smallestAngle) {

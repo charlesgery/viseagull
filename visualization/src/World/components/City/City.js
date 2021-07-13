@@ -39,6 +39,10 @@ class City extends Group {
     }
   }
 
+  getCityCenter(){
+    return {x: this.position.x + this.cityWidth / 2, y: this.position.z + this.cityLength / 2};
+  }
+
 }
 
 export { City };
