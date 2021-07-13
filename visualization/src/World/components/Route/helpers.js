@@ -43,8 +43,6 @@ function computeFacingDirections(firstCity, secondCity) {
     let baseY = 0;
 
     let relativeAngle = Math.atan2(directionY, directionX) - Math.atan2(baseY, baseX);
-    console.log('Relative Angle')
-    console.log(relativeAngle);
     
     if (relativeAngle >= 0) {
         if (relativeAngle < Math.PI / 4) {

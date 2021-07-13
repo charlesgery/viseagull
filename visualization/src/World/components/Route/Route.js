@@ -22,8 +22,6 @@ class Route extends Group {
         }
     }
 
-    console.log(bestDirection)
-
     let startingX = startingPoints.X;
     let startingY = startingPoints.Y;
     let endingX = endingPoints.X;
@@ -112,18 +110,6 @@ class Route extends Group {
         theta2 = 2 * Math.PI - sMath.acos(op2.x * om2.x + op2.y * om2.y);
     }
 
-    
-    console.log(v)
-    console.log(t)
-    console.log(t1)
-    console.log(t2)
-    console.log(c1)
-    console.log(r1)
-    console.log(theta1)
-
-    console.log(c2)
-    console.log(r2)
-    console.log(theta2)
     
 
     shape.moveTo(startingX, startingY);
@@ -249,7 +235,6 @@ class Route extends Group {
 
 
     if(isEdgeCase(bestDirection)) {
-        console.log(isEdgeCase(bestDirection))
         if (bestDirection[1] == 'N'){
             shape.lineTo(endingX - routeWidth, endingY);
         } else if (bestDirection[1] == 'S'){
