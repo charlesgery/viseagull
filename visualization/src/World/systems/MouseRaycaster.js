@@ -85,6 +85,14 @@ const setSize = (container, camera, renderer) => {
         this.highlightedCommit = commit;
     }
 
+    untrackElement(object) {
+        for (let i=0; i < this.trackedObjects.length; i++){
+            if (this.trackedObjects[i].object.parent.uuid == object.uuid){
+                this.trackedObjects.splice(i, 1);
+            }
+        }
+    }
+
 
   }
   

@@ -36,7 +36,7 @@ class GUI {
 
         this.routeSlider = this.gui.add(parameters, "Display routes with width >=", 0, maxWidth);
         this.routeSlider.onChange(function(value){
-            updateDisplayedRoutes(value, routes, scene);
+            updateDisplayedRoutes(value, routes, scene, mouseRaycaster);
         });
 
         this.gui.width = 500;
@@ -67,12 +67,14 @@ function updateBuildingColor(value, cities, filesModificationsDates){
     }
 };
 
-function updateDisplayedRoutes(value, routes, scene){
+function updateDisplayedRoutes(value, routes, scene, mouseRaycaster){
     for (let i=0; i<routes.length; i++){
         if (routes[i].children[0].routeWidth < value){
             scene.remove(routes[i]);
+            mouseRaycaster.untrackElement(routes[i]);
         } else if (routes[i].parent != scene) {
             scene.add(routes[i]);
+            mouseRaycaster.add(routes[i].children[0], 'road');
         }
     }
 
