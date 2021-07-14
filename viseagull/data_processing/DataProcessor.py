@@ -1,3 +1,5 @@
+import logging
+
 from numpy import save
 import sklearn
 import prince
@@ -160,5 +162,9 @@ class DataProcessor:
             file_name = f'data_{self.analyzer.couplings_type}_{self.analyzer._get_repo_name_from_url(self.analyzer.url)}.js'
             with open("./saved_templates/" + file_name, "w") as f:
                 f.write(template)
+            
+            logger = logging.getLogger('viseagull')
+            logger.info(f"Saved template as {file_name} in ./saved_templates folder")
+
 
         return template
