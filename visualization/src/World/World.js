@@ -126,7 +126,7 @@ class World {
 
 
     // Mouse Raycaster
-    this.mouseRaycaster = new MouseRaycaster(container, camera,commitToFiles);
+    this.mouseRaycaster = new MouseRaycaster(container, camera,commitToFiles, cities);
     for(let i=0; i < cities.length; i++){
       for(let j=1; j < cities[i].children.length; j++){
         this.mouseRaycaster.add(cities[i].children[j], 'building');

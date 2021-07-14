@@ -9,10 +9,12 @@ const setSize = (container, camera, renderer) => {
   };
   
   class MouseRaycaster {
-    constructor(container, camera, commitToFiles) {
+    constructor(container, camera, commitToFiles, cities) {
 
         const raycaster = new Raycaster();
         const mouse = new Vector2(1, 1);
+
+        this.cities = cities;
 
         this.trackedObjects = [];
         this["Hovered Element Information"] = "";
@@ -41,16 +43,27 @@ const setSize = (container, camera, renderer) => {
                 }
             }
 
+            var firstHighlightedCity = null;
+            var secondHighlightedCity = null;
             for(let i=0; i<this.trackedObjects.length; i++){
-                if (closestObject != null && this.trackedObjects[i].object.uuid == closestObject.uuid) {
-                    this.trackedObjects[i].object.material.color.set(0xffff00)
 
-                    if (this.trackedObjects[i].tag == 'building'){
-                        this["Hovered Element Information"] = this.trackedObjects[i].object.fileName;
+
+                if (closestObject != null && this.trackedObjects[i].object.uuid == closestObject.uuid) {
+
+                    if (this.trackedObjects[i].tag == 'building' || this.trackedObjects[i].tag == 'road'){
+                        this.trackedObjects[i].object.material.color.set(0xffff00)
+
+                        if (this.trackedObjects[i].tag == 'building'){
+                            this["Hovered Element Information"] = this.trackedObjects[i].object.fileName;
+                        }
+                        else if (this.trackedObjects[i].tag == 'road'){
+                            this["Hovered Element Information"] = this.trackedObjects[i].object.firstCityLabel + ' to ' + this.trackedObjects[i].object.secondCityLabel + '. Width :' + this.trackedObjects[i].object.routeWidth;
+                            firstHighlightedCity = this.trackedObjects[i].object.firstCityLabel;
+                            secondHighlightedCity = this.trackedObjects[i].object.secondCityLabel
+                            
+                        }
                     }
-                    else if (this.trackedObjects[i].tag == 'road'){
-                        this["Hovered Element Information"] = this.trackedObjects[i].object.firstCityLabel + ' to ' + this.trackedObjects[i].object.secondCityLabel + '. Width :' + this.trackedObjects[i].object.routeWidth;
-                    }
+                    
 
                 }
                 else{
@@ -70,6 +83,14 @@ const setSize = (container, camera, renderer) => {
                         this.trackedObjects[i].object.material.color.set(this.trackedObjects[i].object.initialColor);
                     }
                     
+                }
+
+                for (let j=0; j<this.cities.length; j++){
+                    if (this.cities[j].cityLabel == firstHighlightedCity || this.cities[j].cityLabel == secondHighlightedCity){
+                        this.cities[j].meshes.cityGround.material.color.set(0xffff00);
+                    } else {
+                        this.cities[j].meshes.cityGround.material.color.set('grey');
+                    }
                 }
             }
             
