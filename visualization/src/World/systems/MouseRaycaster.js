@@ -17,9 +17,60 @@ const setSize = (container, camera, renderer) => {
         this.cities = cities;
 
         this.trackedObjects = [];
+        this.hardColored = {};
+
         this["Hovered Element Information"] = "";
         this.commitToFiles = commitToFiles;
         this.highlightedCommit = null;
+
+        window.addEventListener('click', (event) => {
+
+            var closestObject = this.getClosestObject(event, mouse, container, raycaster, camera);
+            var clickedOnBuilding = false;
+
+            for(let i=0; i<this.trackedObjects.length; i++){
+
+
+                if (closestObject != null && this.trackedObjects[i].object.uuid == closestObject.uuid) {
+
+                    // reset hard coded
+                    // ajouter un variable hard colored pour pas changer ce qui a été colorié suite a un clic
+                    if (this.trackedObjects[i].tag == 'building'){
+
+                        this.resetHardColored()
+                        
+                        clickedOnBuilding = true;
+                        var parentCityLabel = this.trackedObjects[i].object.parent.cityLabel;
+                        
+                        for (let j=0; j<this.cities.length; j++){
+                            if (this.cities[j].cityLabel == parentCityLabel){
+                                this.cities[j].meshes.cityGround.material.color.set(0xffff00);
+                                this.hardColored[this.cities[j].meshes.cityGround.uuid] = true;
+                            }
+                        }
+
+                        for(let j=0; j<this.trackedObjects.length; j++){
+                            if (this.trackedObjects[j].tag == 'road'){
+                                if (this.trackedObjects[j].object.firstCityLabel == parentCityLabel || this.trackedObjects[j].object.secondCityLabel == parentCityLabel){
+                                    this.trackedObjects[j].object.material.color.set(0xffff00);
+                                    this.hardColored[this.trackedObjects[j].object.uuid] = true;
+                                }
+                            }
+                        }
+
+                    } 
+                    
+                }
+            }
+
+            if (!clickedOnBuilding) {
+                // set all elements to their initial color
+                this.resetHardColored()
+            }
+
+
+
+        })
   
         window.addEventListener('mousemove', (event) => {
 
@@ -80,7 +131,9 @@ const setSize = (container, camera, renderer) => {
                             this.trackedObjects[i].object.material.color.set('darkslategray'); 
                         }
                     } else {
-                        this.trackedObjects[i].object.material.color.set(this.trackedObjects[i].object.initialColor);
+                        if (!(this.trackedObjects[i].object.uuid in this.hardColored) || this.hardColored[this.trackedObjects[i].object.uuid] == false){
+                            this.trackedObjects[i].object.material.color.set(this.trackedObjects[i].object.initialColor);
+                        }
                     }
                     
                 }
@@ -89,7 +142,10 @@ const setSize = (container, camera, renderer) => {
                     if (this.cities[j].cityLabel == firstHighlightedCity || this.cities[j].cityLabel == secondHighlightedCity){
                         this.cities[j].meshes.cityGround.material.color.set(0xffff00);
                     } else {
-                        this.cities[j].meshes.cityGround.material.color.set('grey');
+                        if (!(this.cities[j].meshes.cityGround.uuid in this.hardColored) || this.hardColored[this.cities[j].meshes.cityGround.uuid] == false){
+                            this.cities[j].meshes.cityGround.material.color.set('grey');
+                        }
+                        
                     }
                 }
             }
@@ -111,6 +167,41 @@ const setSize = (container, camera, renderer) => {
             if (this.trackedObjects[i].object.parent.uuid == object.uuid){
                 this.trackedObjects.splice(i, 1);
             }
+        }
+    }
+
+    getClosestObject(event, mouse, container, raycaster, camera) {
+        mouse.x = ( event.clientX / container.offsetWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / container.offsetHeight ) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        var minDistance = -1;
+        var closestObject = null;
+        for(let i=0; i<this.trackedObjects.length; i++){
+            const intersects = raycaster.intersectObject(this.trackedObjects[i].object);
+            if (intersects.length !== 0) {
+                let obj = intersects[0].object;
+                let distance = intersects[0].distance;
+                if(distance <= minDistance || minDistance < 0){
+                    minDistance = distance;
+                    closestObject = obj;
+                }
+            }
+        }
+
+        return closestObject;
+    }
+
+    resetHardColored(){
+        for (let j=0; j<this.cities.length; j++){
+            this.cities[j].meshes.cityGround.material.color.set('grey');
+            this.hardColored[this.cities[j].meshes.cityGround.uuid] = false;
+        }
+
+        for(let j=0; j<this.trackedObjects.length; j++){
+            this.trackedObjects[j].object.material.color.set(this.trackedObjects[j].object.initialColor);
+            this.hardColored[this.trackedObjects[j].object.uuid] = false;
         }
     }
 
