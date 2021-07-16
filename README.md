@@ -15,18 +15,18 @@ This tool works in two phases :
 2. It then creates an interactive visualization of the repository based on the results of the analysis.
 
 Two types of couplings can be used for the analysis based on the user choice :
-- Logical couplings : two files are coupled logicaly if they have been modified in the same commits (the more common commits, the more coupled they are).
-- Semantic couplings : two files are semantically coupled if they share a common lexicon.
+- Logical couplings: two files are coupled logically if they have been modified in the same commits (the more common commits, the more coupled they are).
+- Semantic couplings: two files are semantically coupled if they share a common lexicon.
 
 ## The visualization
 
 ---
 
-The visualization works as follows : each file is represented as a building. Buildings are grouped together in clusters/cities based on the results of the clustering analysis.
+The visualization works as follows: each file is represented as a building. Buildings are grouped in clusters/cities based on the results of the clustering analysis.
 
 Roads link clusters/cities that have files that have been modified together in a commit (eg. if we have two clusters A and B, if file 1 from cluster A has been modified in common commit with file 2 from cluster B, there will be a road between the two clusters). Each road has a width (not represented visually for now, but can be obtained by hovering over the road), the width is the number of commits in which at least of file from the first cluster and a file from the second cluster were modified at the same time.
 
-The distances between the clusters/cities is based on the similarity between them. Clusters with strongly coupled files should be closer.
+The distances between the clusters/cities are based on the similarity between them. Clusters with strongly coupled files should be closer.
 
 The GUI displays information on the element you are hovering :
 - Name of the file for the buildings
@@ -43,12 +43,11 @@ Several parameters are available in the visualization :
 - Change the color of the buildings based on :
     - Last modification data,
     - Creation date
-    In both cases, the more recently a file has been modified/created, the more red it will be.
-- Highlight the buildings modified in a commit : if you input the hash of a commit, all the files/buildigs modified in it will be colored in blue.
-- Display only the roads with a width bigger than X (where the user can choose the value of X). It helps removing noise (i.e. roads with a small width).
-For more details read medium article
+    In both cases, the more recently a file has been modified/created, the redder it will be.
+- Highlight the buildings modified in a commit: if you input the hash of a commit, all the files/buildings modified in it will be colored in blue.
+- Display only the roads with a width bigger than X (where the user can choose the value of X). It helps to remove noise (i.e. roads with small width).
 
-### Differences between visualization of logical and semantic couplings
+### Differences between the visualization of logical and semantic couplings
 
 - Logical couplings :
     - When visualizing logical couplings, the height of the buildings represents the number of times a file has been modified in a commit. The higher, the more commits it has been modified in.
@@ -63,20 +62,20 @@ For more details read medium article
 
 ### Installation
 
-To install Viseagull you need to download this repo, go the download location and then run
+To install Viseagull you need to download this repo, go to the download location, and then run
 ```make setup```.
 This should install the required dependencies and the tool.
 
 ### Using Viseagull
 
-To use Viseagull **you need to place yourself in the folder where you downloaded it.** You can then use use the command :
+To use Viseagull **you need to place yourself in the folder where you downloaded it.** You can then use the command :
 ```
 viseagull [Url Of Your Repo You Want To Visualize]
 ```
-The url can either be the path to a local repository, or the url to an open-source project :
+The url can either be the path to a local repository or the url to an open-source project :
 ```
 viseagull https://github.com/charlesgery/viseagull.git
-viseagull C:/charlesgery/viseagull
+viseagull C:/<your_name>/viseagull
 ```
 
 Depending on the size of your project, the analysis can take quite some time.
@@ -86,9 +85,9 @@ Depending on the size of your project, the analysis can take quite some time.
 Additional parameters are available. You can get a list of the available parameters by using ```viseagull --help```.
 
 The main parameters are for now :
-- ```--logical / --semantic``` : the type of analysis you want to run on your repo. Logical is the default one.
-- ```--save``` : saves the visualization data to quickly load it later without rerunning the analysis.
-- ```--load [pathToFile]``` : loads existing visualization data to quickly visualize it.
+- ```--logical / --semantic```: the type of analysis you want to run on your repo. Logical is the default one.
+- ```--save```: saves the visualization data to quickly load it later without rerunning the analysis.
+- ```--load [pathToFile]```: loads existing visualization data to quickly visualize it.
 
 
 
