@@ -33,8 +33,6 @@ const setSize = (container, camera, renderer) => {
 
                 if (closestObject != null && this.trackedObjects[i].object.uuid == closestObject.uuid) {
 
-                    // reset hard coded
-                    // ajouter un variable hard colored pour pas changer ce qui a été colorié suite a un clic
                     if (this.trackedObjects[i].tag == 'building'){
 
                         this.resetHardColored()
@@ -75,24 +73,7 @@ const setSize = (container, camera, renderer) => {
         window.addEventListener('mousemove', (event) => {
 
 
-            mouse.x = ( event.clientX / container.offsetWidth ) * 2 - 1;
-    	    mouse.y = - ( event.clientY / container.offsetHeight ) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-
-            var minDistance = -1;
-            var closestObject = null;
-            for(let i=0; i<this.trackedObjects.length; i++){
-                const intersects = raycaster.intersectObject(this.trackedObjects[i].object);
-                if (intersects.length !== 0) {
-                    let obj = intersects[0].object;
-                    let distance = intersects[0].distance;
-                    if(distance <= minDistance || minDistance < 0){
-                        minDistance = distance;
-                        closestObject = obj;
-                    }
-                }
-            }
+            var closestObject = this.getClosestObject(event, mouse, container, raycaster, camera);
 
             var firstHighlightedCity = null;
             var secondHighlightedCity = null;
@@ -128,10 +109,12 @@ const setSize = (container, camera, renderer) => {
                         if (isInCommit){
                             this.trackedObjects[i].object.material.color.set('blue');
                         } else {
-                            this.trackedObjects[i].object.material.color.set('darkslategray'); 
+                            if (this.isNotHardColored(this.trackedObjects[i].object)){
+                                this.trackedObjects[i].object.material.color.set(this.trackedObjects[i].object.initialColor); 
+                            }
                         }
                     } else {
-                        if (!(this.trackedObjects[i].object.uuid in this.hardColored) || this.hardColored[this.trackedObjects[i].object.uuid] == false){
+                        if (this.isNotHardColored(this.trackedObjects[i].object)){
                             this.trackedObjects[i].object.material.color.set(this.trackedObjects[i].object.initialColor);
                         }
                     }
@@ -203,6 +186,10 @@ const setSize = (container, camera, renderer) => {
             this.trackedObjects[j].object.material.color.set(this.trackedObjects[j].object.initialColor);
             this.hardColored[this.trackedObjects[j].object.uuid] = false;
         }
+    }
+
+    isNotHardColored(object){
+        return !(object.uuid in this.hardColored) || this.hardColored[object.uuid] == false;
     }
 
 
