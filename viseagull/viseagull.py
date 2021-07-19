@@ -47,9 +47,9 @@ def main():
     logger.setLevel(level=logging.INFO)
 
     license = """A ludic visualization tool to explore your codebase. Copyright (C) 2021  Charles Géry
-This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+This program comes with ABSOLUTELY NO WARRANTY;'.
 This is free software, and you are welcome to redistribute it
-under certain conditions; type `show c' for details.\n\n"""
+under certain conditions;\n\n"""
     logger.info(license)
 
     parser = argparse.ArgumentParser(description='Process repository url')
