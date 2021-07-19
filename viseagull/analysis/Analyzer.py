@@ -116,7 +116,6 @@ class Analyzer:
 
         self._tmp_dir = tempfile.TemporaryDirectory()
         clone_folder = self._tmp_dir.name
-        # print(clone_folder)
 
         return clone_folder
 
