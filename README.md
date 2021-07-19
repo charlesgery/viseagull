@@ -18,6 +18,40 @@ Two types of couplings can be used for the analysis based on the user choice :
 - Logical couplings: two files are coupled logically if they have been modified in the same commits (the more common commits, the more coupled they are).
 - Semantic couplings: two files are semantically coupled if they share a common lexicon.
 
+## Getting started
+
+---
+
+### Installation
+
+To install Viseagull you need to download this repo, go to the download location, and then run
+```make setup```.
+This should install the required dependencies and the tool.
+
+### Using Viseagull
+
+To use Viseagull **you need to place yourself in the folder where you downloaded it.** You can then use the command :
+```
+viseagull [Url Of Your Repo You Want To Visualize]
+```
+The url can either be the path to a local repository or the url to an open-source project :
+```
+viseagull https://github.com/charlesgery/viseagull.git
+viseagull C:/<your_name>/viseagull
+```
+
+Depending on the size of your project, the analysis can take quite some time.
+
+### Additional parameters
+
+Additional parameters are available. You can get a list of the available parameters by using ```viseagull --help```.
+
+The main parameters are for now :
+- ```--logical / --semantic```: the type of analysis you want to run on your repo. Logical is the default one. Semantic analysis only works with repositories with Python files.
+- ```--save```: saves the visualization data to quickly load it later without rerunning the analysis.
+- ```--load [pathToFile]```: loads existing visualization data to quickly visualize it.
+
+
 ## The visualization
 
 ---
@@ -56,38 +90,6 @@ Several parameters are available in the visualization :
     - The roads, have the same meaning as in logical couplings. The road still means that files from both clusters have been modified in a common commit. The width also still means the same thing.
 
 
-## Getting started
-
----
-
-### Installation
-
-To install Viseagull you need to download this repo, go to the download location, and then run
-```make setup```.
-This should install the required dependencies and the tool.
-
-### Using Viseagull
-
-To use Viseagull **you need to place yourself in the folder where you downloaded it.** You can then use the command :
-```
-viseagull [Url Of Your Repo You Want To Visualize]
-```
-The url can either be the path to a local repository or the url to an open-source project :
-```
-viseagull https://github.com/charlesgery/viseagull.git
-viseagull C:/<your_name>/viseagull
-```
-
-Depending on the size of your project, the analysis can take quite some time.
-
-### Additional parameters
-
-Additional parameters are available. You can get a list of the available parameters by using ```viseagull --help```.
-
-The main parameters are for now :
-- ```--logical / --semantic```: the type of analysis you want to run on your repo. Logical is the default one.
-- ```--save```: saves the visualization data to quickly load it later without rerunning the analysis.
-- ```--load [pathToFile]```: loads existing visualization data to quickly visualize it.
 
 
 
