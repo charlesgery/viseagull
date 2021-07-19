@@ -33,10 +33,10 @@ class DataProcessor:
             cityData = {}
             cityData['label'] = key
             cityData['centroid'] = {'x':self.cluster_centroid[key][0], 'y':self.cluster_centroid[key][1]}
-            cityData['buildings'] = [{'height':self.analyzer.df.loc[name, "sum"], 'fileName':name} for name in self.clusterer.clusters[key]]
+            cityData['buildings'] = [{'height':self.analyzer.df.loc[name, "sum"], 'fileName':name} for name in self.clusterer.clusters[key] if name in list(self.analyzer.df.index)]
 
-
-            self.citiesData.append(cityData)
+            if len(cityData['buildings']) > 0:
+                self.citiesData.append(cityData)
 
         self.create_js_file(save_data)
 
@@ -78,7 +78,7 @@ class DataProcessor:
             cluster_to_commits[cluster_number] = []
             for cluster_file in cluster_files:
                 for column in df.columns:
-                    if df.loc[cluster_file, column] == 1:
+                    if cluster_file in list(df.index) and df.loc[cluster_file, column] == 1:
                         cluster_to_commits[cluster_number].append(column)
 
         cluster_to_route = {}
