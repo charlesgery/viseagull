@@ -24,9 +24,26 @@ Two types of couplings can be used for the analysis based on the user choice :
 
 ### Installation
 
-To install Viseagull you need to download this repo, go to the download location, and then run
+Python 3.7+ is required to use the tool. It is advised to use a virtual environment to install and use the tool, you can easily create and activate one using :
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+To install Viseagull you need to clone this repo, go to the download location, and then run
 ```make setup```.
+
+Alternatively, if the previous command does not work or you do not have ```make``` installed, you can use the following commands instead :
+
+```
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python ./setup.py build
+python ./setup.py install
+```
+
 This should install the required dependencies and the tool.
+
 
 ### Using Viseagull
 
