@@ -12,7 +12,7 @@ class LogicalClusterer(Clusterer):
                     method='AggClustering',
                     distance_matrix=True,
                     min_size=3,
-                    max_eps=1,
+                    eps=1,
                     join_clusterless_samples=True)
 
         

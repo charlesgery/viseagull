@@ -1,3 +1,4 @@
+from scipy.spatial.kdtree import distance_matrix
 from .Clusterer import Clusterer
 
 class SemanticClusterer(Clusterer):
@@ -6,11 +7,15 @@ class SemanticClusterer(Clusterer):
         super().__init__(distance_matrix)
 
     def compute_clustering(self):
+
+        for i in range(self.distance_matrix.shape[0]): #iterate over rows
+            for j in range(self.distance_matrix.shape[1]): #iterate over columns
+                self.distance_matrix.iloc[i, j] = 1.0 - self.distance_matrix.iloc[i, j]
         
         self.clusters, self.clusters_labels = self.cluster_dataframe(
                     self.distance_matrix,
-                    method='HDBSCAN',
+                    method='BIRCH',
                     distance_matrix=True,
                     min_size=3,
-                    max_eps=1,
+                    eps=0.95,
                     join_clusterless_samples=True)
