@@ -3,7 +3,6 @@ tqdm
 pandas
 scikit-learn>=0.24.2
 GitPython
-hdbscan==0.8.27
 prince
 nltk
-numpy==1.20.3
+numpy
