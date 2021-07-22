@@ -1,4 +1,3 @@
-from scipy.spatial.kdtree import distance_matrix
 from .Clusterer import Clusterer
 
 class SemanticClusterer(Clusterer):

@@ -1,13 +1,15 @@
-import os
-import atexit
-import tempfile
-import shutil
+from os import path
+from atexit import register
+from tempfile import TemporaryDirectory
+from shutil import rmtree
 from distutils.dir_util import copy_tree
 
-import pydriller
-import tqdm
-import pandas as pd
-import git
+from git import Repo
+from pandas import DataFrame
+
+from pydriller import Repository, Git
+from tqdm import tqdm
+
 
 
 
@@ -42,10 +44,10 @@ class Analyzer:
             self.repo_folder = self._clone_local_repository(self._clone_folder(), url)
 
         # Get a Repository object
-        self.repository_mining = pydriller.Repository(self.repo_folder, num_workers=1)
+        self.repository_mining = Repository(self.repo_folder, num_workers=1)
 
         # Get a Git object
-        self.git_repo = pydriller.Git(self.repo_folder)
+        self.git_repo = Git(self.repo_folder)
         self.total_commits = self.git_repo.total_commits()
 
         # Commits
@@ -54,17 +56,17 @@ class Analyzer:
         # Get list of files
         self.forbidden_file_extensions = ['.zip', '.gif', '.png']
         repo_files_paths = self.git_repo.files()
-        self.path_prefix = os.path.commonpath(repo_files_paths)
+        self.path_prefix = path.commonpath(repo_files_paths)
         self.repo_files_path = []
         for file_path in repo_files_paths:
-            _, file_extension = os.path.splitext(file_path)
+            _, file_extension = path.splitext(file_path)
             if file_extension not in self.forbidden_file_extensions:
                 file_path = file_path[len(self.path_prefix)+1:]
                 self.repo_files_path.append(file_path)
         
         # Find earlier names and paths of these files
         self.old_to_new_path = {}
-        pbar = tqdm.tqdm(total=self.total_commits)
+        pbar = tqdm(total=self.total_commits)
         for commit in self.repository_mining.traverse_commits():
             self.commits.append(commit)
             for modification in commit.modified_files:
@@ -82,7 +84,7 @@ class Analyzer:
         self.couplings_type = None
         
         # Remove temp folder at end of execution
-        atexit.register(self._cleanup)
+        register(self._cleanup)
 
     @staticmethod
     def _is_remote_repository(repo: str) -> bool:
@@ -96,8 +98,8 @@ class Analyzer:
         """ Clones the remote repo to path_to_folder.
         """
 
-        repo_folder = os.path.join(path_to_folder, self._get_repo_name_from_url(repo))
-        git.Repo.clone_from(url=repo, to_path=repo_folder)
+        repo_folder = path.join(path_to_folder, self._get_repo_name_from_url(repo))
+        Repo.clone_from(url=repo, to_path=repo_folder)
 
         return repo_folder
 
@@ -105,7 +107,7 @@ class Analyzer:
         """Clones a local repository to a temp folder
         """
 
-        repo_folder = os.path.join(path_to_tmp_folder, self._get_repo_name_from_url(path_to_repo))
+        repo_folder = path.join(path_to_tmp_folder, self._get_repo_name_from_url(path_to_repo))
         copy_tree(path_to_repo, repo_folder)
 
         return repo_folder
@@ -114,7 +116,7 @@ class Analyzer:
         """ Create and returns a temporary folder.
         """
 
-        self._tmp_dir = tempfile.TemporaryDirectory()
+        self._tmp_dir = TemporaryDirectory()
         clone_folder = self._tmp_dir.name
 
         return clone_folder
@@ -146,7 +148,7 @@ class Analyzer:
                 # on Windows, Python 3.5, 3.6, 3.7 are not able to delete
                 # git directories because of read-only files.
                 # In this case, just ignore the errors.
-                shutil.rmtree(self._tmp_dir.name, ignore_errors=True)
+                rmtree(self._tmp_dir.name, ignore_errors=True)
 
     def run_general_analysis(self,
             get_logical_couplings_df=False,
@@ -218,7 +220,7 @@ class Analyzer:
             index.append(key)
             dataframe_list.append(files_commits[key])
         
-        self.df = pd.DataFrame(dataframe_list, index=index, columns=columns)
+        self.df = DataFrame(dataframe_list, index=index, columns=columns)
 
     def get_current_path(self, path):
         if path in self.repo_files_path:

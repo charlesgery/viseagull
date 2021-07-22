@@ -1,22 +1,24 @@
-import http.server
-import socketserver
-import os
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
+
+from os import path, getcwd, chdir
+
 from pathlib import Path
 
 def run_webserver():
     
     PORT = 8000
 
-    file_path = Path(os.path.dirname(__file__))
-    web_dir = os.path.join(os.getcwd(), 'visualization')
-    os.chdir(web_dir)
+    file_path = Path(path.dirname(__file__))
+    web_dir = path.join(getcwd(), 'visualization')
+    chdir(web_dir)
 
-    Handler = http.server.SimpleHTTPRequestHandler
+    Handler = SimpleHTTPRequestHandler
     Handler.extensions_map.update({
         ".js": "application/javascript",
     })
 
-    httpd = socketserver.TCPServer(("", PORT), Handler)
+    httpd = TCPServer(("", PORT), Handler)
     httpd.serve_forever()
 
 if __name__ == "__main__":

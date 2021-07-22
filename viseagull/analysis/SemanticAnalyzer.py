@@ -1,8 +1,9 @@
-import ast
-import re
-import math
+from ast import parse, walk, FunctionDef, ClassDef, Name
+from re import findall
 
-import pandas as pd
+from math import log, sqrt
+
+from pandas import DataFrame
 from nltk.stem import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -31,7 +32,7 @@ class SemanticAnalyzer(Analyzer):
         tf_idf = self.compute_tf_idf(voc_to_index, tf, idf)
 
 
-        self.tf_idf_df = pd.DataFrame.from_dict(tf_idf, orient='index')
+        self.tf_idf_df = DataFrame.from_dict(tf_idf, orient='index')
 
         self.run_general_analysis(
             get_logical_couplings_df=True,
@@ -46,7 +47,7 @@ class SemanticAnalyzer(Analyzer):
         distance_matrix = cosine_similarity(self.tf_idf_df)
         for i in range(len(distance_matrix)):
             distance_matrix[i][i] = 1
-        distance_df = pd.DataFrame(distance_matrix, index=self.tf_idf_df.index, columns=self.tf_idf_df.index)
+        distance_df = DataFrame(distance_matrix, index=self.tf_idf_df.index, columns=self.tf_idf_df.index)
 
         self.distance_matrix = distance_df
 
@@ -62,14 +63,14 @@ class SemanticAnalyzer(Analyzer):
 
             try :
                 with open(self.repo_folder + '\\' + file_path) as data_source:
-                    ast_root = ast.parse(data_source.read())
+                    ast_root = parse(data_source.read())
                     
                 identifiers = []
 
-                for node in ast.walk(ast_root):
-                    if isinstance(node, ast.Name):
+                for node in walk(ast_root):
+                    if isinstance(node, Name):
                         identifiers.append(node.id)
-                    elif isinstance(node, ast.FunctionDef) or isinstance(node, ast.ClassDef):
+                    elif isinstance(node, FunctionDef) or isinstance(node, ClassDef):
                         identifiers.append(node.name)
 
                 file_to_identifiers[file_path] = identifiers
@@ -114,7 +115,7 @@ class SemanticAnalyzer(Analyzer):
 
         splitted_sentence = []
         for snake_word in splitted_snake_sentence:
-            camel_words = re.findall(r'.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', snake_word)
+            camel_words = findall(r'.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', snake_word)
             for camel_word in camel_words:
                 splitted_sentence.append(camel_word)
 
@@ -183,7 +184,7 @@ class SemanticAnalyzer(Analyzer):
                 if word in identifiers:
                     num_doc += 1
 
-            idf[word] = math.log(len(file_identifiers) / num_doc)
+            idf[word] = log(len(file_identifiers) / num_doc)
 
         return idf
 
@@ -222,7 +223,7 @@ class SemanticAnalyzer(Analyzer):
             norm_a += a[i] ** 2
             norm_b += b[i] ** 2
 
-        norm_a = math.sqrt(norm_a)
-        norm_b = math.sqrt(norm_b)
+        norm_a = sqrt(norm_a)
+        norm_b = sqrt(norm_b)
 
         return dot / (norm_a * norm_b)

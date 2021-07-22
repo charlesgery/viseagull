@@ -1,6 +1,7 @@
 import logging
-import argparse
-import shutil
+
+from argparse import ArgumentParser
+from shutil import copy
 
 from viseagull.webserver import run_webserver
 from viseagull.analysis.LogicalAnalyzer import LogicalAnalyzer
@@ -52,7 +53,7 @@ This is free software, and you are welcome to redistribute it
 under certain conditions;\n\n"""
     logger.info(license)
 
-    parser = argparse.ArgumentParser(description='Process repository url')
+    parser = ArgumentParser(description='Process repository url')
     parser.add_argument('url', type=str, nargs=1)
     parser.add_argument('--couplings', type=str, nargs=1, help="logical or semantic")
     parser.add_argument('--save', help='save template', action='store_true')
@@ -64,7 +65,7 @@ under certain conditions;\n\n"""
         logger.info('Loading existing template')
         src = './saved_templates/' + args.load[0]
         dest = './visualization/data.js'
-        shutil.copy(src, dest)
+        copy(src, dest)
 
     else:
 

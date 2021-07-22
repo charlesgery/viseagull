@@ -1,4 +1,4 @@
-import pandas as pd
+from pandas import DataFrame
 from sklearn.neighbors import DistanceMetric
 
 from .Analyzer import Analyzer
@@ -26,7 +26,7 @@ class LogicalAnalyzer(Analyzer):
         dist = DistanceMetric.get_metric('jaccard')
         distance_matrix = dist.pairwise(self.df.iloc[:,:].to_numpy())
 
-        distance_df = pd.DataFrame(distance_matrix, index=self.df.index, columns=self.df.index)
+        distance_df = DataFrame(distance_matrix, index=self.df.index, columns=self.df.index)
 
         self.distance_matrix = distance_df
 

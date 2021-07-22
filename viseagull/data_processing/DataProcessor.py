@@ -1,9 +1,8 @@
 import logging
 
-from numpy import save
-import sklearn
-import prince
-import pandas as pd
+from sklearn import manifold
+from prince import MCA
+from pandas import DataFrame
 
 class DataProcessor:
 
@@ -47,25 +46,25 @@ class DataProcessor:
         """
 
         if method == 'tSNE':
-            tsne = sklearn.manifold.TSNE(n_components=2, perplexity=5, metric='precomputed', square_distances=True)
+            tsne = manifold.TSNE(n_components=2, perplexity=5, metric='precomputed', square_distances=True)
             embedded_data = tsne.fit_transform(df)
 
         
         elif method == 'MCA':
         
             df.replace({0: "False", 1: "True"}, inplace = True)
-            mca = prince.MCA(n_components=2)
+            mca = MCA(n_components=2)
             embedded_data = mca.fit_transform(df)
         
 
         elif method == 'NMDS':
 
-            nmds = sklearn.manifold.MDS(n_components=2, metric=False, max_iter=3000, eps=1e-12,
+            nmds = manifold.MDS(n_components=2, metric=False, max_iter=3000, eps=1e-12,
                     dissimilarity="precomputed",
                     n_init=1)
             embedded_data = nmds.fit_transform(df)
 
-        df_embedded = pd.DataFrame(embedded_data, index=df.index)
+        df_embedded = DataFrame(embedded_data, index=df.index)
 
         return df_embedded
 
