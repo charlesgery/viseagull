@@ -159,7 +159,7 @@ class DataProcessor:
             template += f"const activeBranch = null;\n"
 
         template += "const commitsHashes = "
-        template += str(self.analyzer.commits_hashes)
+        template += str(['None'] + self.analyzer.commits_hashes)
         template += ';\n'
 
 

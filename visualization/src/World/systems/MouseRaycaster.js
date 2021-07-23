@@ -172,7 +172,8 @@ const setSize = (container, camera, renderer) => {
     }
 
     updateHighlightedCommit(commit) {
-        this.highlightedCommit = commit;
+        if(commit != 'None') this.highlightedCommit = commit;
+        else this.highlightedCommit = null;
     }
 
     untrackElement(object) {
