@@ -87,6 +87,10 @@ When you hover the road, the starting and ending cities will be highlighted.
 
 You can click on any building of a cluster to highlight the cluster and the roads getting in/out of it.
 
+If you used the url to an online open-source repository you can:
+- Open a file in a new tab by double-clicking on it,
+- Open a commit in a new tab, by selecting it, and then clicking on the corresponding button in the GUI.
+
 ### Visualization parameters
 
 Several parameters are available in the visualization :
