@@ -36,10 +36,12 @@ class Analyzer:
         """
 
         self.url = url
+        self.is_remote = False
 
         # Clone repo if necessary
         if self._is_remote_repository(url):
             self.repo_folder = self._clone_remote_repository(self._clone_folder(), url)
+            self.is_remote = True
         else:
             self.repo_folder = self._clone_local_repository(self._clone_folder(), url)
 
@@ -49,6 +51,12 @@ class Analyzer:
         # Get a Git object
         self.git_repo = Git(self.repo_folder)
         self.total_commits = self.git_repo.total_commits()
+
+        # Get url to all files
+        self.url_to_files = None
+        if self.is_remote:
+            active_branch = self.git_repo.repo.active_branch.name
+            self.url_to_files = self.url[:-4] + '/blob/' + active_branch + '/'
 
         # Commits
         self.commits = []

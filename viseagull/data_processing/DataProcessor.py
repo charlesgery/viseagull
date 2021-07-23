@@ -13,6 +13,7 @@ class DataProcessor:
         self.cluster_to_route = None
         self.cluster_centroid = None
         self.citiesData = []
+        self.url_to_files = analyzer.url_to_files
         
 
     def setup_visualization_data(self, save_data=False):
@@ -151,8 +152,13 @@ class DataProcessor:
             template += '}, '
         template += "};\n"
 
+        if self.url_to_files is not None:
+            template += f"const urlToFiles = '{self.url_to_files}';\n"
+        else:
+            template += "const urlToFiles = null;\n"
+
         template += """\n"""
-        template += "export { citiesData, routesData, commitToFiles, filesModificationsDates };"
+        template += "export { citiesData, routesData, commitToFiles, filesModificationsDates, urlToFiles };"
 
         with open("./visualization/data.js", "w") as f:
             f.write(template)

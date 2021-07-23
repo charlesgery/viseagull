@@ -9,7 +9,7 @@ const setSize = (container, camera, renderer) => {
   };
   
   class MouseRaycaster {
-    constructor(container, camera, commitToFiles, cities) {
+    constructor(container, camera, commitToFiles, cities, urlToFiles) {
 
         const raycaster = new Raycaster();
         const mouse = new Vector2(1, 1);
@@ -68,7 +68,7 @@ const setSize = (container, camera, renderer) => {
 
 
 
-        })
+        });
   
         window.addEventListener('mousemove', (event) => {
 
@@ -135,7 +135,37 @@ const setSize = (container, camera, renderer) => {
             
  
         });
+
+        window.addEventListener('dblclick', (event) => {
+
+            if (urlToFiles !== null){
+                var closestObject = this.getClosestObject(event, mouse, container, raycaster, camera);
+                var clickedOnBuilding = false;
+
+                for(let i=0; i<this.trackedObjects.length; i++){
+
+                    if (closestObject != null && this.trackedObjects[i].object.uuid == closestObject.uuid) {
+    
+                        if (this.trackedObjects[i].tag == 'building'){
+                            
+                            clickedOnBuilding = true;
+
+                            window.open(
+                                urlToFiles + closestObject.fileName, "_blank");
+                            
+    
+                        } 
+                        
+                    }
+                }
+            }
+
+
+
+        });
     }
+
+
 
     add(object, tag){
         this.trackedObjects.push({object: object, tag: tag});

@@ -30,7 +30,7 @@ let loop;
 
 class World {
 
-  constructor(container, citiesData, routesData, commitToFiles, filesModificationsDates) {
+  constructor(container, citiesData, routesData, commitToFiles, filesModificationsDates, urlToFiles) {
 
 
     // Creating system
@@ -126,7 +126,7 @@ class World {
 
 
     // Mouse Raycaster
-    this.mouseRaycaster = new MouseRaycaster(container, camera,commitToFiles, cities);
+    this.mouseRaycaster = new MouseRaycaster(container, camera,commitToFiles, cities, urlToFiles);
     for(let i=0; i < cities.length; i++){
       for(let j=1; j < cities[i].children.length; j++){
         this.mouseRaycaster.add(cities[i].children[j], 'building');
