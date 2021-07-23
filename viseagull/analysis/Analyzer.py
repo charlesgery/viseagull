@@ -53,13 +53,13 @@ class Analyzer:
         self.total_commits = self.git_repo.total_commits()
 
         # Get url to all files
-        self.url_to_files = None
+        self.active_branch = None
         if self.is_remote:
-            active_branch = self.git_repo.repo.active_branch.name
-            self.url_to_files = self.url[:-4] + '/blob/' + active_branch + '/'
+            self.active_branch = self.git_repo.repo.active_branch.name
 
         # Commits
         self.commits = []
+        self.commits_hashes = []
 
         # Get list of files
         self.forbidden_file_extensions = ['.zip', '.gif', '.png']
@@ -77,11 +77,13 @@ class Analyzer:
         pbar = tqdm(total=self.total_commits)
         for commit in self.repository_mining.traverse_commits():
             self.commits.append(commit)
+            self.commits_hashes.append(commit.hash)
             for modification in commit.modified_files:
                 if modification.old_path != modification.new_path and modification.old_path is not None:
                     self.old_to_new_path[modification.old_path] = modification.new_path
             pbar.update(1)
         pbar.close()
+        self.commits_hashes.reverse()
 
         self.df = None
         self.commit_to_files = {}

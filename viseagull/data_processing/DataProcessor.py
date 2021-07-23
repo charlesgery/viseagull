@@ -13,7 +13,6 @@ class DataProcessor:
         self.cluster_to_route = None
         self.cluster_centroid = None
         self.citiesData = []
-        self.url_to_files = analyzer.url_to_files
         
 
     def setup_visualization_data(self, save_data=False):
@@ -152,13 +151,20 @@ class DataProcessor:
             template += '}, '
         template += "};\n"
 
-        if self.url_to_files is not None:
-            template += f"const urlToFiles = '{self.url_to_files}';\n"
+        if self.analyzer.is_remote:
+            template += f"const url = '{self.analyzer.url[:-4]}';\n"
+            template += f"const activeBranch = '{self.analyzer.active_branch}';\n"
         else:
-            template += "const urlToFiles = null;\n"
+            template += "const url = null;\n"
+            template += f"const activeBranch = null;\n"
+
+        template += "const commitsHashes = "
+        template += str(self.analyzer.commits_hashes)
+        template += ';\n'
+
 
         template += """\n"""
-        template += "export { citiesData, routesData, commitToFiles, filesModificationsDates, urlToFiles };"
+        template += "export { citiesData, routesData, commitToFiles, filesModificationsDates, url, commitsHashes, activeBranch };"
 
         with open("./visualization/data.js", "w") as f:
             f.write(template)

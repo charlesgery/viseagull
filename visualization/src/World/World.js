@@ -22,6 +22,7 @@ import { replaceCities } from './helpers/citiesLayout.js'
 import { CameraHelper } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import { GUI } from './systems/GUI.js';
 import { getMinMaxBuildingSize, getMinMaxDate } from './helpers/worldHelpers.js';
+import { commitsHashes } from '../../data.js';
 
 let camera;
 let renderer;
@@ -30,7 +31,7 @@ let loop;
 
 class World {
 
-  constructor(container, citiesData, routesData, commitToFiles, filesModificationsDates, urlToFiles) {
+  constructor(container, citiesData, routesData, commitToFiles, filesModificationsDates, url, commitsHashes, activeBranch) {
 
 
     // Creating system
@@ -126,7 +127,7 @@ class World {
 
 
     // Mouse Raycaster
-    this.mouseRaycaster = new MouseRaycaster(container, camera,commitToFiles, cities, urlToFiles);
+    this.mouseRaycaster = new MouseRaycaster(container, camera,commitToFiles, cities, url, activeBranch);
     for(let i=0; i < cities.length; i++){
       for(let j=1; j < cities[i].children.length; j++){
         this.mouseRaycaster.add(cities[i].children[j], 'building');
@@ -144,7 +145,7 @@ class World {
     */
 
     // GUI
-    var gui = new GUI(cities, filesModificationsDates, this.mouseRaycaster, routes, scene);
+    var gui = new GUI(cities, filesModificationsDates, this.mouseRaycaster, routes, scene, commitsHashes, url);
 
     
   }

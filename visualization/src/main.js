@@ -1,5 +1,5 @@
 
-import { citiesData, routesData, commitToFiles, filesModificationsDates, urlToFiles } from '../data.js';
+import { citiesData, routesData, commitToFiles, filesModificationsDates, url, commitsHashes, activeBranch } from '../data.js';
 import { World } from './World/World.js'; 
 
 function main() {
@@ -7,7 +7,7 @@ function main() {
 const container = document.querySelector('#scene-container');
 
 // create a new world
-const world = new World(container, citiesData, routesData, commitToFiles, filesModificationsDates, urlToFiles);
+const world = new World(container, citiesData, routesData, commitToFiles, filesModificationsDates, url, commitsHashes, activeBranch);
 
 // start the animation loop
 world.start();

@@ -9,7 +9,7 @@ const setSize = (container, camera, renderer) => {
   };
   
   class MouseRaycaster {
-    constructor(container, camera, commitToFiles, cities, urlToFiles) {
+    constructor(container, camera, commitToFiles, cities, url, activeBranch) {
 
         const raycaster = new Raycaster();
         const mouse = new Vector2(1, 1);
@@ -138,7 +138,7 @@ const setSize = (container, camera, renderer) => {
 
         window.addEventListener('dblclick', (event) => {
 
-            if (urlToFiles !== null){
+            if (activeBranch !== null){
                 var closestObject = this.getClosestObject(event, mouse, container, raycaster, camera);
                 var clickedOnBuilding = false;
 
@@ -151,7 +151,7 @@ const setSize = (container, camera, renderer) => {
                             clickedOnBuilding = true;
 
                             window.open(
-                                urlToFiles + closestObject.fileName, "_blank");
+                                url + '/blob/' + activeBranch + '/' + closestObject.fileName, "_blank");
                             
     
                         } 

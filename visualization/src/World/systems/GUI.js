@@ -5,11 +5,13 @@ import { getMinMaxDate } from '../helpers/worldHelpers.js';
 class GUI {
 
 
-    constructor(cities, filesModificationsDates, mouseRaycaster, routes, scene){
+    constructor(cities, filesModificationsDates, mouseRaycaster, routes, scene, commitsHashes, url){
 
         this.routes = routes;
 
         this.gui = new dat.GUI({name: 'Couplings Visualization'});
+
+        var commit = null;
 
         var parameters = {
             "Building Color" : "base",
@@ -17,15 +19,33 @@ class GUI {
             "Display routes with width >=" : 0
         }
 
+        var button = { 'Open Commit in new Tab':function(){
+            if (commit !== null && url !== null){
+                var urlToCommit = url + '/commit/' + commit;
+                console.log(url);
+                window.open(urlToCommit, "_blank");
+            } else if (url == null){
+                alert('Using local repository');
+            } else{
+                alert('No commit selected');
+            }
+            
+        }};
+
         this.buildingColor = this.gui.add(parameters, "Building Color", ["base", "File Creation Date", "File Last Modification Date"]);
         this.buildingColor.onChange(function(value){
             updateBuildingColor(value, cities, filesModificationsDates);
         });
 
-        this.highlightedCommit = this.gui.add(parameters, "Highlight Commit with Hash");
+        this.commitFolder = this.gui.addFolder('Display commits')
+
+        this.highlightedCommit = this.commitFolder.add(parameters, "Highlight Commit with Hash", commitsHashes);
         this.highlightedCommit.onChange(function(value){
             mouseRaycaster.updateHighlightedCommit(value);
+            commit = value;
         });
+
+        this.commitFolder.add(button,'Open Commit in new Tab');
 
         var maxWidth = 0;
         for (let i=0; i<routes.length; i++){
@@ -39,7 +59,7 @@ class GUI {
             updateDisplayedRoutes(value, routes, scene, mouseRaycaster);
         });
 
-        this.gui.width = 500;
+        this.gui.width = 700;
 
         this.gui.open();
 
