@@ -19,7 +19,7 @@ class GUI {
             "Display routes with width >=" : 0
         }
 
-        var button = { 'Open Commit in new Tab':function(){
+        var buttonCommit = { 'Open Commit in new Tab':function(){
             if (commit !== null && url !== null && commit != 'None'){
                 var urlToCommit = url + '/commit/' + commit;
                 console.log(url);
@@ -30,6 +30,10 @@ class GUI {
                 alert('No commit selected');
             }
             
+        }};
+
+        var buttonFeedback = { 'Send Feedback':function(){
+                window.open("mailto:charles.gery@gmail.com?subject=Feedback%20Viseagull", "_blank");
         }};
 
         this.buildingColor = this.gui.add(parameters, "Building Color", ["base", "File Creation Date", "File Last Modification Date"]);
@@ -45,7 +49,7 @@ class GUI {
             commit = value;
         });
 
-        this.commitFolder.add(button,'Open Commit in new Tab');
+        this.commitFolder.add(buttonCommit,'Open Commit in new Tab');
 
         var maxWidth = 0;
         for (let i=0; i<routes.length; i++){
@@ -58,6 +62,8 @@ class GUI {
         this.routeSlider.onChange(function(value){
             updateDisplayedRoutes(value, routes, scene, mouseRaycaster);
         });
+
+        this.gui.add(buttonFeedback,'Send Feedback');
 
         this.gui.width = 700;
 
