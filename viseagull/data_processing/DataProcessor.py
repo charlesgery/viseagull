@@ -152,7 +152,12 @@ class DataProcessor:
         template += "};\n"
 
         if self.analyzer.is_remote:
-            template += f"const url = '{self.analyzer.url[:-4]}';\n"
+            print(self.analyzer.url[-4:])
+            if self.analyzer.url[-4:] == '.git':
+                url = self.analyzer.url[:-4]
+            else:
+                url = self.analyzer.url
+            template += f"const url = '{url}';\n"
             template += f"const activeBranch = '{self.analyzer.active_branch}';\n"
         else:
             template += "const url = null;\n"
