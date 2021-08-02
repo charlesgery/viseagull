@@ -22,7 +22,6 @@ class GUI {
         var buttonCommit = { 'Open Commit in new Tab':function(){
             if (commit !== null && url !== null && commit != 'None'){
                 var urlToCommit = url + '/commit/' + commit;
-                console.log(url);
                 window.open(urlToCommit, "_blank");
             } else if (url == null){
                 alert('Using local repository');
