@@ -54,11 +54,14 @@ under certain conditions;\n\n"""
     logger.info(license)
 
     parser = ArgumentParser(description='Process repository url')
-    parser.add_argument('url', type=str, nargs=1)
+    parser.add_argument('url', type=str, nargs='?')
     parser.add_argument('--couplings', type=str, nargs=1, help="logical or semantic")
     parser.add_argument('--save', help='save template', action='store_true')
     parser.add_argument('--load', help='load existing template', type=str, nargs=1)
     args = parser.parse_args()
+
+    if args.url is None and args.load is None:
+        parser.error("Viseagull requires the url to a repository. See --help for more details.")
 
     if args.load is not None:
 
@@ -70,7 +73,7 @@ under certain conditions;\n\n"""
     else:
 
         logger.info('STEP 1/5 - Initializing analyzer')
-        analyzer = get_analyzer(args.couplings, args.url[0])
+        analyzer = get_analyzer(args.couplings, args.url)
         
 
         logger.info('STEP 2/5 - Analyzing Couplings')
