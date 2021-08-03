@@ -89,7 +89,7 @@ const setSize = (container, camera, renderer) => {
                             this["Hovered Element Information"] = this.trackedObjects[i].object.fileName;
                         }
                         else if (this.trackedObjects[i].tag == 'road'){
-                            this["Hovered Element Information"] = this.trackedObjects[i].object.firstCityLabel + ' to ' + this.trackedObjects[i].object.secondCityLabel + '. Width :' + this.trackedObjects[i].object.routeWidth;
+                            this["Hovered Element Information"] = 'Width :' + this.trackedObjects[i].object.routeWidth;
                             firstHighlightedCity = this.trackedObjects[i].object.firstCityLabel;
                             secondHighlightedCity = this.trackedObjects[i].object.secondCityLabel
                             
