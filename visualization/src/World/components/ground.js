@@ -2,7 +2,7 @@ import { PlaneBufferGeometry, MeshStandardMaterial, Mesh } from 'https://unpkg.c
 
 function createGround() {
 
-    const geometry = new PlaneBufferGeometry(3000, 3000);
+    const geometry = new PlaneBufferGeometry(5000, 5000);
     const material = new MeshStandardMaterial({color: "green"});
 
     const ground = new Mesh(geometry, material);
