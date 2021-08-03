@@ -72,12 +72,14 @@ class DataProcessor:
         """ Find the routes between clusters for a Software as Cities visualization.
         """
 
+        dict_of_files = set(list(df.index))
+
         cluster_to_commits = {}
         for cluster_number, cluster_files in clusters.items():
             cluster_to_commits[cluster_number] = []
             for cluster_file in cluster_files:
                 for column in df.columns:
-                    if cluster_file in list(df.index) and df.loc[cluster_file, column] == 1:
+                    if cluster_file in dict_of_files and df.loc[cluster_file, column] == 1:
                         cluster_to_commits[cluster_number].append(column)
 
         cluster_to_route = {}
