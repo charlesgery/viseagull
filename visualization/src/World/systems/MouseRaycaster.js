@@ -27,6 +27,7 @@ const setSize = (container, camera, renderer) => {
 
             var closestObject = this.getClosestObject(event, mouse, container, raycaster, camera);
             var clickedOnBuilding = false;
+            var filesNames = [];
 
             for(let i=0; i<this.trackedObjects.length; i++){
 
@@ -44,6 +45,12 @@ const setSize = (container, camera, renderer) => {
                             if (this.cities[j].cityLabel == parentCityLabel){
                                 this.cities[j].meshes.cityGround.material.color.set(0xffff00);
                                 this.hardColored[this.cities[j].meshes.cityGround.uuid] = true;
+
+                                var city = this.cities[j];
+                                for (let j=0; j<city.meshes.buildings.length; j++){
+                                    filesNames.push(city.meshes.buildings[j].fileName);
+                                }
+                                filesNames.sort();
                             }
                         }
 
@@ -61,9 +68,26 @@ const setSize = (container, camera, renderer) => {
                 }
             }
 
+            var clusterFilesBox = document.getElementById("cluster-files");
+            this.resetClusterFilesList();
+
             if (!clickedOnBuilding) {
                 // set all elements to their initial color
+                clusterFilesBox.style.padding = "0px";
+                clusterFilesBox.style.border = "0px solid #ff7300";
                 this.resetHardColored()
+            } else {
+                clusterFilesBox.style.padding = "10px";
+                clusterFilesBox.style.border = "2px solid #ff7300";
+                var ul = document.createElement("ul");
+                for (let i=0; i<filesNames.length; i++){
+                    var li = document.createElement("li");
+                    var textNode = document.createTextNode(filesNames[i]);
+                    li.appendChild(textNode);
+                    ul.appendChild(li);
+                }
+
+                clusterFilesBox.appendChild(ul);
             }
 
 
@@ -221,6 +245,14 @@ const setSize = (container, camera, renderer) => {
 
     isNotHardColored(object){
         return !(object.uuid in this.hardColored) || this.hardColored[object.uuid] == false;
+    }
+
+    resetClusterFilesList(){
+        var clusterFilesBox = document.getElementById("cluster-files");
+        if(clusterFilesBox.childNodes.length > 0){
+            var list = clusterFilesBox.childNodes[0];
+            clusterFilesBox.removeChild(list);
+        } 
     }
 
 
