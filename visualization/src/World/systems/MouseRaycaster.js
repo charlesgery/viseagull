@@ -74,11 +74,11 @@ const setSize = (container, camera, renderer) => {
             if (!clickedOnBuilding) {
                 // set all elements to their initial color
                 clusterFilesBox.style.padding = "0px";
-                clusterFilesBox.style.border = "0px solid #ff7300";
+                clusterFilesBox.style.border = "0px solid yellow";
                 this.resetHardColored()
             } else {
                 clusterFilesBox.style.padding = "10px";
-                clusterFilesBox.style.border = "2px solid #ff7300";
+                clusterFilesBox.style.border = "2px solid yellow";
                 var ul = document.createElement("ul");
                 for (let i=0; i<filesNames.length; i++){
                     var li = document.createElement("li");
