@@ -91,6 +91,7 @@ under certain conditions;\n\n"""
         data_processor.setup_visualization_data(args.save)
 
     logger.info('Visualization web server running at localhost:8000')
+    logger.info('Open localhost:8000 in your browser to view the visualization')
     run_webserver()
     
 
