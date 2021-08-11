@@ -154,7 +154,6 @@ class DataProcessor:
         template += "};\n"
 
         if self.analyzer.is_remote:
-            print(self.analyzer.url[-4:])
             if self.analyzer.url[-4:] == '.git':
                 url = self.analyzer.url[:-4]
             else:
@@ -173,12 +172,12 @@ class DataProcessor:
         template += """\n"""
         template += "export { citiesData, routesData, commitToFiles, filesModificationsDates, url, commitsHashes, activeBranch };"
 
-        with open("./visualization/data.js", "w") as f:
+        with open("./visualization/data.js", "w", encoding="utf-8") as f:
             f.write(template)
 
         if save_data:
             file_name = f'data_{self.analyzer.couplings_type}_{self.analyzer._get_repo_name_from_url(self.analyzer.url)}.js'
-            with open("./saved_templates/" + file_name, "w") as f:
+            with open("./saved_templates/" + file_name, "w", encoding="utf-8") as f:
                 f.write(template)
             
             logger = logging.getLogger('viseagull')
