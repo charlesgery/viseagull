@@ -139,3 +139,7 @@ dmypy.json
 # IDE
 .vscode
 .idea
+
+file_count.py
+performance_data.csv
+performance_analysis.py
