@@ -62,6 +62,9 @@ under certain conditions;\n\n"""
     parser.add_argument('--debug', help='displays running times', action='store_true')
     args = parser.parse_args()
 
+    if args.debug:
+        logger.setLevel(level=logging.DEBUG)
+
     if args.url is None and args.load is None:
         parser.error("Viseagull requires the url to a repository. See --help for more details.")
 
@@ -79,34 +82,26 @@ under certain conditions;\n\n"""
         
 
         logger.info('STEP 2/5 - Analyzing Couplings')
-        if args.debug:
-            start_time = time.time()
+        start_time = time.time()
         analyzer.compute_couplings()
-        if args.debug:
-            logger.info(f'STEP 2/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 2/5 Executed in {time.time() - start_time}s')
 
         logger.info('STEP 3/5 - Computing distance matrix')
-        if args.debug:
-            start_time = time.time()
+        start_time = time.time()
         distance_matrix = analyzer.get_distance_matrix()
-        if args.debug:
-            logger.info(f'STEP 3/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 3/5 Executed in {time.time() - start_time}s')
 
         logger.info('STEP 4/5 - Computing Clustering')
-        if args.debug:
-            start_time = time.time()
+        start_time = time.time()
         clusterer = get_clusterer(args.couplings, distance_matrix)
         clusterer.compute_clustering()
-        if args.debug:
-            logger.info(f'STEP 4/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 4/5 Executed in {time.time() - start_time}s')
 
         logger.info('STEP 5/5 - Setting up visualization data')
-        if args.debug:
-            start_time = time.time()
+        start_time = time.time()
         data_processor = DataProcessor(analyzer, clusterer)
         data_processor.setup_visualization_data(args.save)
-        if args.debug:
-            logger.info(f'STEP 5/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 5/5 Executed in {time.time() - start_time}s')
 
     logger.info('Visualization web server running at localhost:8000')
     logger.info('Open localhost:8000 in your browser to view the visualization')
