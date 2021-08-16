@@ -34,7 +34,7 @@ class Clusterer:
                         linkage='average',
                         distance_threshold=0.95)
             else:
-                clusterer = clusterer = AgglomerativeClustering(
+                clusterer = AgglomerativeClustering(
                         n_clusters=None,
                         distance_threshold=1)
 
