@@ -3,6 +3,7 @@ from atexit import register
 from tempfile import TemporaryDirectory
 from shutil import rmtree
 from distutils.dir_util import copy_tree
+from time import time
 
 from git import Repo
 from pandas import DataFrame
@@ -66,6 +67,7 @@ class Analyzer:
         repo_files_paths = self.git_repo.files()
         self.path_prefix = path.commonpath(repo_files_paths)
         self.repo_files_path = []
+
         for file_path in repo_files_paths:
             _, file_extension = path.splitext(file_path)
             if file_extension not in self.forbidden_file_extensions:
@@ -75,6 +77,7 @@ class Analyzer:
         # Find earlier names and paths of these files
         self.old_to_new_path = {}
         pbar = tqdm(total=self.total_commits)
+        start_time = time()
         for commit in self.repository_mining.traverse_commits():
             self.commits.append(commit)
             self.commits_hashes.append(commit.hash)
@@ -82,6 +85,7 @@ class Analyzer:
                 if modification.old_path != modification.new_path and modification.old_path is not None:
                     self.old_to_new_path[modification.old_path] = modification.new_path
             pbar.update(1)
+        self.init_time = time() - start_time
         pbar.close()
         self.commits_hashes.reverse()
 
@@ -92,6 +96,8 @@ class Analyzer:
         self.distance_matrix = None
 
         self.couplings_type = None
+
+        self.number_files = len(self.repo_files_path)
         
         # Remove temp folder at end of execution
         register(self._cleanup)

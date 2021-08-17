@@ -4,6 +4,8 @@ import time
 from argparse import ArgumentParser
 from shutil import copy
 
+from numpy import number
+
 from viseagull.webserver import run_webserver
 from viseagull.analysis.LogicalAnalyzer import LogicalAnalyzer
 from viseagull.analysis.SemanticAnalyzer import SemanticAnalyzer
@@ -40,6 +42,38 @@ def get_clusterer(couplings_type, distance_matrix):
         clusterer = LogicalClusterer(distance_matrix)
 
     return clusterer
+
+def get_epsilon(number_files, number_commits, init_time):
+
+    time_baseline = number_commits * 3.80640347e-02 + number_files * number_commits * 8.21324738e-06
+    
+    return init_time / time_baseline
+
+def predict_execution_time(number_files, number_commits, epsilon, step):
+    
+    predicted_time = 0
+
+    if step == 2:
+        predicted_time = (number_files * 1.27241508e-04 + number_commits * 1.08355355e-04 +
+            number_files * number_commits * 4.65037380e-07)
+    elif step == 3:
+        predicted_time = (number_files * number_commits * 4.52106394e-07 +
+            (number_files ** 2) * number_commits * 1.32475623e-09 +
+            number_files * (number_commits ** 2) * 1.05041833e-12)
+    elif step == 4:
+        predicted_time = (number_files * 3.33070576e-05 + (number_files ** 3) * 5.49653195e-12)
+    elif step == 5:
+        predicted_time = (number_files * 2.75483947e-03 +
+            number_files * number_commits * 6.98932455e-06 +
+            (number_files ** 2 * number_commits) * 9.12066810e-10)
+    
+
+    if predicted_time < 0:
+        predicted_time = 0
+
+    adjusted_predicted_time = epsilon * predicted_time
+
+    return adjusted_predicted_time
 
 def main():
 
@@ -80,28 +114,42 @@ under certain conditions;\n\n"""
         logger.info('STEP 1/5 - Initializing analyzer')
         analyzer = get_analyzer(args.couplings, args.url)
         
+        number_files = analyzer.number_files
+        number_commits = analyzer.total_commits
+        init_time = analyzer.init_time
+        epsilon = get_epsilon(number_files, number_commits, init_time)
+
+
 
         logger.info('STEP 2/5 - Analyzing Couplings')
+        predicted_execution_time = predict_execution_time(number_files, number_commits, epsilon, 2)
+        logger.debug(f'Predicted execution time : {predicted_execution_time}s')
         start_time = time.time()
         analyzer.compute_couplings()
-        logger.debug(f'STEP 2/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 2/5 Executed in {time.time() - start_time}s\n')
 
         logger.info('STEP 3/5 - Computing distance matrix')
+        predicted_execution_time = predict_execution_time(number_files, number_commits, epsilon, 3)
+        logger.debug(f'Predicted execution time : {predicted_execution_time}s')
         start_time = time.time()
         distance_matrix = analyzer.get_distance_matrix()
-        logger.debug(f'STEP 3/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 3/5 Executed in {time.time() - start_time}s\n')
 
         logger.info('STEP 4/5 - Computing Clustering')
+        predicted_execution_time = predict_execution_time(number_files, number_commits, epsilon, 4)
+        logger.debug(f'Predicted execution time : {predicted_execution_time}s')
         start_time = time.time()
         clusterer = get_clusterer(args.couplings, distance_matrix)
         clusterer.compute_clustering()
-        logger.debug(f'STEP 4/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 4/5 Executed in {time.time() - start_time}s\n')
 
         logger.info('STEP 5/5 - Setting up visualization data')
+        predicted_execution_time = predict_execution_time(number_files, number_commits, epsilon, 5)
+        logger.debug(f'Predicted execution time : {predicted_execution_time}s')
         start_time = time.time()
         data_processor = DataProcessor(analyzer, clusterer)
         data_processor.setup_visualization_data(args.save)
-        logger.debug(f'STEP 5/5 Executed in {time.time() - start_time}s')
+        logger.debug(f'STEP 5/5 Executed in {time.time() - start_time}s\n')
 
     logger.info('Visualization web server running at localhost:8000')
     logger.info('Open localhost:8000 in your browser to view the visualization')
