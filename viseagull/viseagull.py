@@ -1,4 +1,5 @@
 import logging
+from os import remove
 import time
 
 from argparse import ArgumentParser
@@ -15,17 +16,17 @@ from viseagull.clustering.SemanticClusterer import SemanticClusterer
 
 from viseagull.data_processing.DataProcessor import DataProcessor
 
-def get_analyzer(couplings_type, url):
+def get_analyzer(couplings_type, url, remove_bulk):
     
     if couplings_type is not None:
         if couplings_type[0] == 'logical':
-            analyzer = LogicalAnalyzer(url)
+            analyzer = LogicalAnalyzer(url, remove_bulk)
         elif couplings_type[0] == 'semantic':
-            analyzer = SemanticAnalyzer(url)
+            analyzer = SemanticAnalyzer(url, remove_bulk)
         else:
             raise ValueError("Wrong couplings type")
     else:
-        analyzer = LogicalAnalyzer(url)
+        analyzer = LogicalAnalyzer(url, remove_bulk)
 
     return analyzer
 
@@ -94,6 +95,7 @@ under certain conditions;\n\n"""
     parser.add_argument('--save', help='save template', action='store_true')
     parser.add_argument('--load', help='load existing template', type=str, nargs=1)
     parser.add_argument('--debug', help='displays running times', action='store_true')
+    parser.add_argument('--remove-bulk', help="removes commits with more than N files from analysis", type=int, nargs=1)
     args = parser.parse_args()
 
     if args.debug:
@@ -112,14 +114,15 @@ under certain conditions;\n\n"""
     else:
 
         logger.info('STEP 1/5 - Initializing analyzer')
-        analyzer = get_analyzer(args.couplings, args.url)
+        remove_bulk = -1
+        if args.remove_bulk is not None:
+            remove_bulk = args.remove_bulk[0]
+        analyzer = get_analyzer(args.couplings, args.url, remove_bulk)
         
         number_files = analyzer.number_files
         number_commits = analyzer.total_commits
         init_time = analyzer.init_time
         epsilon = get_epsilon(number_files, number_commits, init_time)
-
-
 
         logger.info('STEP 2/5 - Analyzing Couplings')
         predicted_execution_time = predict_execution_time(number_files, number_commits, epsilon, 2)

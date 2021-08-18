@@ -11,8 +11,8 @@ from .Analyzer import Analyzer
 
 class SemanticAnalyzer(Analyzer):
 
-    def __init__(self, url) -> None:
-        super().__init__(url)
+    def __init__(self, url, remove_bulk=-1) -> None:
+        super().__init__(url, remove_bulk)
 
         self.couplings_type = 'semantic'
 
@@ -76,6 +76,8 @@ class SemanticAnalyzer(Analyzer):
                 file_to_identifiers[file_path] = identifiers
 
             except:
+                path = self.repo_folder + "\\" + file_path
+                print(f'Could not read {path}')
                 pass
         
         return file_to_identifiers

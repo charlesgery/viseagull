@@ -5,8 +5,8 @@ from .Analyzer import Analyzer
 
 class LogicalAnalyzer(Analyzer):
 
-    def __init__(self, url) -> None:
-        super().__init__(url)
+    def __init__(self, url, remove_bulk=-1) -> None:
+        super().__init__(url, remove_bulk)
 
         self.couplings_type = 'logical'
 

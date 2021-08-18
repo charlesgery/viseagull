@@ -16,7 +16,7 @@ from tqdm import tqdm
 
 class Analyzer:
 
-    def __init__(self, url):
+    def __init__(self, url, remove_bulk=-1):
         """ Downloads the repo in a temp folder if it is not stored locally.
         Create a repository mining object to later analyze the commits.
         Registers a function to supress the temp folder at the end of the execution
@@ -38,6 +38,8 @@ class Analyzer:
 
         self.url = url
         self.is_remote = False
+        
+        self.remove_bulk = remove_bulk
 
         # Clone repo if necessary
         if self._is_remote_repository(url):
@@ -194,7 +196,8 @@ class Analyzer:
 
                     # Updating dataframe data
                     if get_logical_couplings_df:
-                        self.update_logical_couplings_df_data(current_path, files_commits, i)
+                        if self.remove_bulk == -1 or len(commit.modified_files) < self.remove_bulk:
+                            self.update_logical_couplings_df_data(current_path, files_commits, i)
 
             if get_commit_to_files:
                 self.commit_to_files[commit.hash] = modified_files
